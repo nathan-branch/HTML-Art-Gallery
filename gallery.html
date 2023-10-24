@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Branch Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background: linear-gradient(to right, #7a53e3, #3e8eff);
+            color: #fff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2;
+            padding: 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .nav-links li a::after {
+            content: '';
+            border: 2px solid #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .nav-links li a:hover {
+            color: #000;
+            background-color: #f0f0f0;
+        }
+
+        .nav-links li a:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: #fff;
+            list-style: none;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+        }
+
+        .dropdown-menu li {
+            margin: 5px 0;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            max-width: 60%;
+        }
+
+        .content-wrapper h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .content-wrapper p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .artwork {
+            flex: 1;
+            max-width: calc(40% - 20px);
+            margin: 0 10px 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .artwork img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .caption {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .image-sidebar {
+            float: right;
+            width: 30%;
+            padding: 20px;
+            background: #f0f0f0;
+            text-align: center;
+        }
+
+        .image-sidebar img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .image-sidebar .caption {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            max-width: 100%;
+            margin-top: 60px;
+        }
+
+        .timeline {
+            width: 50px;
+            background: linear-gradient(to bottom, #7a53e3, #3e8eff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
+
+        .timeline-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-line {
+            width: 30px;
+            height: 2px;
+            background: #fff;
+            margin: 10px 0 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .timeline-label {
+            color: white;
+        }
+
+        .timeline-label::before {
+            content: attr(data-year);
+            font-size: 12px;
+            color: #fff;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #7a53e3;
+            padding: 2px 5px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .timeline-line:hover::before {
+            opacity: 1;
+        }
+
+        .timeline-tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">The Branch Gallery</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Categories</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Paintings</a></li>
+                        <li><a href="#">Sculptures</a></li>
+                        <li><a href="#">Photography</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <section class="main-content">
+            <div class="content-wrapper">
+                <h1>Welcome to The Branch Gallery</h1>
+                <p>
+                    Explore the beauty and diversity of art and culture through our collection of stunning artworks. 
+                    From paintings that evoke emotions to sculptures that tell stories, our gallery is a window to the 
+                    creative expressions of talented artists from around the world.
+                </p>
+            </div>
+            <div class="artwork">
+                <img src="artwork1.jpeg" alt="Artwork 1">
+                <p class="caption">Artwork Title 1</p>
+            </div>
+            <div class="artwork">
+                <img src="artwork2.jpeg" alt="Artwork 2">
+                <p class="caption">Artwork Title 2</p>
+            </div>
+            <div class="artwork">
+                <img src="artwork3.jpeg" alt="Artwork 3">
+                <p class="caption">Artwork Title 3</p>
+            </div>
+        </section>
+        <aside class="image-sidebar">
+            <img src="artist.jpeg" alt="Featured Artist">
+            <p class="caption">Featured Artist</p>
+        </aside>
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-inner">
+                <div class="timeline-line" data-year="1500"></div>
+                <div class="timeline-label" data-year="1500">1500</div>
+                <div class="timeline-line" data-year="1510"></div>
+                <div class="timeline-line" data-year="1520"></div>
+                <div class="timeline-line" data-year="1530"></div>
+                <div class="timeline-line" data-year="1540"></div>
+                <div class="timeline-line" data-year="1550"></div>
+                <div class="timeline-line" data-year="1560"></div>
+                <div class="timeline-line" data-year="1570"></div>
+                <div class="timeline-line" data-year="1580"></div>
+                <div class="timeline-line" data-year="1590"></div>
+                <div class="timeline-label" data-year="1600">1600</div>
+                <div class="timeline-line" data-year="1610"></div>
+                <div class="timeline-line" data-year="1620"></div>
+                <div class="timeline-line" data-year="1630"></div>
+                <div class="timeline-line" data-year="1640"></div>
+                <div class="timeline-line" data-year="1650"></div>
+                <div class="timeline-line" data-year="1660"></div>
+                <div class="timeline-line" data-year="1670"></div>
+                <div class="timeline-line" data-year="1680"></div>
+                <div class="timeline-line" data-year="1690"></div>
+                <div class="timeline-label" data-year="1700">1700</div>
+                <div class="timeline-line" data-year="1710"></div>
+                <div class="timeline-line" data-year="1720"></div>
+                <div class="timeline-line" data-year="1730"></div>
+                <div class="timeline-line" data-year="1740"></div>
+                <div class="timeline-line" data-year="1750"></div>
+                <div class="timeline-line" data-year="1760"></div>
+                <div class="timeline-line" data-year="1770"></div>
+                <div class="timeline-line" data-year="1780"></div>
+                <div class="timeline-line" data-year="1790"></div>
+                <div class="timeline-label" data-year="1800">1800</div>
+                <div class="timeline-line" data-year="1810"></div>
+                <div class="timeline-line" data-year="1820"></div>
+                <div class="timeline-line" data-year="1830"></div>
+                <div class="timeline-line" data-year="1840"></div>
+                <div class="timeline-line" data-year="1850"></div>
+                <div class="timeline-line" data-year="1860"></div>
+                <div class="timeline-line" data-year="1870"></div>
+                <div class="timeline-line" data-year="1880"></div>
+                <div class="timeline-line" data-year="1890"></div>
+                <div class="timeline-label" data-year="1900">1900</div>
+                <div class="timeline-line" data-year="1910"></div>
+                <div class="timeline-line" data-year="1920"></div>
+                <div class="timeline-line" data-year="1930"></div>
+                <div class="timeline-line" data-year="1940"></div>
+                <div class="timeline-line" data-year="1950"></div>
+                <div class="timeline-line" data-year="1960"></div>
+                <div class="timeline-line" data-year="1970"></div>
+                <div class="timeline-line" data-year="1980"></div>
+                <div class="timeline-line" data-year="1990"></div>
+                <div class="timeline-label" data-year="2000">2000</div>
+                <div class="timeline-label" data-year="2000"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Tooltip for timeline items -->
+    <div id="timeline-tooltip" class="timeline-tooltip"></div>
+    <!-- Add this updated JavaScript code -->
+    <!-- Update the JavaScript code for the tooltip -->
+    <script>
+        // Get timeline elements and tooltip
+        const timelineLines = document.querySelectorAll('.timeline-line');
+        const timelineTooltip = document.getElementById('timeline-tooltip');
+
+        // Add event listeners for mouseenter and mouseleave
+        timelineLines.forEach((line) => {
+            line.addEventListener('mouseenter', (e) => {
+                const year = line.getAttribute('data-year');
+                showTooltip(e.clientX, e.clientY, year);
+            });
+
+            line.addEventListener('mouseleave', () => {
+                hideTooltip();
+            });
+        });
+
+        // Show tooltip function
+        function showTooltip(x, y, year) {
+            timelineTooltip.style.display = 'block';
+            timelineTooltip.style.left = x + 'px';
+            timelineTooltip.style.top = y + 'px';
+            timelineTooltip.textContent = year;
+        }
+
+        // Hide tooltip function
+        function hideTooltip() {
+            timelineTooltip.style.display = 'none';
+        }
+
+        // Add mousemove event listener to update tooltip position
+        document.addEventListener('mousemove', (e) => {
+            if (timelineTooltip.style.display === 'block') {
+                // Offset the tooltip slightly from the cursor
+                const offsetX = 15;
+                const offsetY = 15;
+
+                timelineTooltip.style.left = e.clientX + offsetX + 'px';
+                timelineTooltip.style.top = e.clientY + offsetY + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
